@@ -7,7 +7,7 @@
 <script>
 // import Leaflet library
 import leaflet from "leaflet";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 export default {
   name: "HomeView",
@@ -15,7 +15,7 @@ export default {
     let map;
     onMounted(() => {
       // init map
-      map = leaflet.map("map").setView([28.538336, -81.379234], 10);
+      map = leaflet.map("map").setView([31.450462, -83.5085], 10);
 
       // add Tile layer
       leaflet
@@ -32,7 +32,62 @@ export default {
           }
         )
         .addTo(map);
+
+      getGeolocation();
     });
+
+    const coords = ref(null);
+    const fetchCoords = ref(null);
+    const geomarker = ref(null);
+
+    const getGeolocation = () => {
+      // start fetching coords
+      fetchCoords.value = true;
+      navigator.geolocation.getCurrentPosition(setCoords, getLocError);
+    };
+
+    const setCoords = (pos) => {
+      // stop fetching coords
+      fetchCoords.value = null;
+
+      // store user location in session storage
+      const setSessionCoords = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+      };
+      sessionStorage.setItem("coords", JSON.stringify(setSessionCoords));
+
+      // update coords value
+      coords.value = setSessionCoords;
+
+      plotGeolocation(coords.value);
+    };
+
+    const getLocError = (err) => {
+      console.log(err);
+    };
+
+    // plot user location on map
+    const plotGeolocation = (coords) => {
+      // create custom marker
+      const customMarker = leaflet.icon({
+        iconUrl: require("../assets/map-marker-red.svg"),
+        // width and height
+        iconSize: [35, 35],
+      });
+
+      // create new marker with coords and icon
+      geomarker.value = leaflet
+        .marker([coords.lat, coords.lng], {
+          icon: customMarker,
+        })
+        .addTo(map);
+
+      // set map view to current location
+      map.setView([coords.lat, coords.lng], 10);
+    };
+
+    return { coords, geomarker };
   },
 };
 </script>
