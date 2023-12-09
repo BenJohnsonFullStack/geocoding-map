@@ -36,8 +36,11 @@ export default {
       getGeolocation();
     });
 
+    // user coords
     const coords = ref(null);
+    // for loading
     const fetchCoords = ref(null);
+    // user location marker
     const geomarker = ref(null);
 
     const getGeolocation = () => {
@@ -60,6 +63,7 @@ export default {
       // update coords value
       coords.value = setSessionCoords;
 
+      // render user location marker
       plotGeolocation(coords.value);
     };
 
@@ -78,9 +82,11 @@ export default {
 
       // create new marker with coords and icon
       geomarker.value = leaflet
+        // set marker location
         .marker([coords.lat, coords.lng], {
           icon: customMarker,
         })
+        // add marker to map
         .addTo(map);
 
       // set map view to current location
