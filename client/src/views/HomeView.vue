@@ -1,11 +1,13 @@
 <template>
   <div class="h-screen relative">
+    <GeoErrorModal />
     <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
 
 <script>
 // import Leaflet library
+import GeoErrorModal from "@/components/GeoErrorModal.vue";
 import leaflet from "leaflet";
 import { onMounted, ref } from "vue";
 
@@ -16,7 +18,6 @@ export default {
     onMounted(() => {
       // init map
       map = leaflet.map("map").setView([31.450462, -83.5085], 10);
-
       // add Tile layer
       leaflet
         .tileLayer(
@@ -32,45 +33,50 @@ export default {
           }
         )
         .addTo(map);
-
       getGeolocation();
     });
-
     // user coords
     const coords = ref(null);
     // for loading
     const fetchCoords = ref(null);
     // user location marker
     const geomarker = ref(null);
-
+    const geoError = ref(null);
+    const geoErrorMsg = ref(null);
     const getGeolocation = () => {
+      // check session storage for coords and plot if they exist
+      if (sessionStorage.getItem) {
+        coords.value = JSON.parse(sessionStorage.getItem("coords"));
+        plotGeolocation(coords.value);
+        return;
+      }
       // start fetching coords
       fetchCoords.value = true;
       navigator.geolocation.getCurrentPosition(setCoords, getLocError);
     };
-
     const setCoords = (pos) => {
       // stop fetching coords
       fetchCoords.value = null;
-
       // store user location in session storage
       const setSessionCoords = {
         lat: pos.coords.latitude,
         lng: pos.coords.longitude,
       };
       sessionStorage.setItem("coords", JSON.stringify(setSessionCoords));
-
       // update coords value
       coords.value = setSessionCoords;
-
       // render user location marker
       plotGeolocation(coords.value);
     };
-
     const getLocError = (err) => {
-      console.log(err);
+      fetchCoords.value = null;
+      geoError.value = true;
+      geoErrorMsg.value = err.message;
     };
-
+    const closeGeoError = () => {
+      geoError.value = null;
+      geoErrorMsg.value = null;
+    };
     // plot user location on map
     const plotGeolocation = (coords) => {
       // create custom marker
@@ -79,7 +85,6 @@ export default {
         // width and height
         iconSize: [35, 35],
       });
-
       // create new marker with coords and icon
       geomarker.value = leaflet
         // set marker location
@@ -88,12 +93,11 @@ export default {
         })
         // add marker to map
         .addTo(map);
-
       // set map view to current location
       map.setView([coords.lat, coords.lng], 10);
     };
-
-    return { coords, geomarker };
+    return { coords, geomarker, closeGeoError };
   },
+  components: { GeoErrorModal },
 };
 </script>
