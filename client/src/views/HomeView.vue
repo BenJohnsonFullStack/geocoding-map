@@ -47,7 +47,7 @@ export default {
     const fetchCoords = ref(null);
     // user location marker
     const geomarker = ref(null);
-    const geoError = ref(true);
+    const geoError = ref(null);
     const geoErrorMsg = ref("Testing modal");
     const getGeolocation = () => {
       // check session storage for coords and plot if they exist
