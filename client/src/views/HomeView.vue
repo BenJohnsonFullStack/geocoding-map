@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen relative">
-    <GeoErrorModal />
+    <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" />
     <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
@@ -41,8 +41,8 @@ export default {
     const fetchCoords = ref(null);
     // user location marker
     const geomarker = ref(null);
-    const geoError = ref(null);
-    const geoErrorMsg = ref(null);
+    const geoError = ref(true);
+    const geoErrorMsg = ref("Testing modal");
     const getGeolocation = () => {
       // check session storage for coords and plot if they exist
       if (sessionStorage.getItem) {
@@ -96,7 +96,7 @@ export default {
       // set map view to current location
       map.setView([coords.lat, coords.lng], 10);
     };
-    return { coords, geomarker, closeGeoError };
+    return { coords, geomarker, closeGeoError, geoError, geoErrorMsg };
   },
   components: { GeoErrorModal },
 };
