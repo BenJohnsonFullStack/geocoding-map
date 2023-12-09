@@ -1,6 +1,10 @@
 <template>
   <div class="h-screen relative">
-    <GeoErrorModal v-if="geoError" :geoErrorMsg="geoErrorMsg" />
+    <GeoErrorModal
+      v-if="geoError"
+      :geoErrorMsg="geoErrorMsg"
+      @closeGeoError="closeGeoError"
+    />
     <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
