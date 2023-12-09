@@ -18,7 +18,8 @@ app.get("/api/search/:query", async (req, res) => {
     const results = await axios(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${process.env.API_KEY}`
     );
-    console.log(results.data);
+    const data = results.data;
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
