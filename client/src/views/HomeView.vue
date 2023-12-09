@@ -5,6 +5,7 @@
       :geoErrorMsg="geoErrorMsg"
       @closeGeoError="closeGeoError"
     />
+    <MapFeatures />
     <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
@@ -12,6 +13,7 @@
 <script>
 // import Leaflet library
 import GeoErrorModal from "@/components/GeoErrorModal.vue";
+import MapFeatures from "@/components/MapFeatures.vue";
 import leaflet from "leaflet";
 import { onMounted, ref } from "vue";
 
@@ -102,6 +104,6 @@ export default {
     };
     return { coords, geomarker, closeGeoError, geoError, geoErrorMsg };
   },
-  components: { GeoErrorModal },
+  components: { GeoErrorModal, MapFeatures },
 };
 </script>
