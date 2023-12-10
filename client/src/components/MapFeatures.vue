@@ -9,6 +9,7 @@
         type="text"
         class="pl-9 pr-4 py-3 text-sm focus:outline-slate-600 w-full shadow-md rounded-md"
         placeholder="Search your favorite spot..."
+        v-model="searchQuery"
       />
 
       <!-- Search Icon -->
@@ -43,7 +44,16 @@
 </template>
 
 <script>
+import { ref } from "vue";
+
 export default {
   props: ["coords", "fetchCoords"],
+  setup() {
+    const searchQuery = ref(null);
+    const searchData = ref(null);
+    const queryTimeout = ref(null);
+
+    return { searchQuery, searchData, queryTimeout };
+  },
 };
 </script>
