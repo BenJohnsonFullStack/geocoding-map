@@ -21,9 +21,9 @@
       <!-- Search Results Container -->
       <div class="absolute mt-2 w-full" v-if="searchQuery">
         <!-- Loading Spinner -->
-        <LoadingSpinner v-if="!searchData" />
-        <div v-else>
-          <div class="h-[200px] overflow-scroll bg-white rounded-md">
+        <div class="h-[200px] overflow-scroll bg-white rounded-md">
+          <LoadingSpinner v-if="!searchData" />
+          <div v-else>
             <div
               class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
               v-for="(result, index) in searchData"
