@@ -9,6 +9,7 @@
       :coords="coords"
       :fetchCoords="fetchCoords"
       @getGeolocation="getGeolocation"
+      @plotResult="plotResult"
     />
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -53,6 +54,9 @@ export default {
     const geomarker = ref(null);
     const geoError = ref(null);
     const geoErrorMsg = ref("Testing modal");
+    // selected search result marker
+    const resultMarker = ref(null);
+
     const getGeolocation = () => {
       // if function is called, only run if we dont have coords
       if (!coords.value) {
@@ -89,15 +93,43 @@ export default {
       // render user location marker
       plotGeolocation(coords.value);
     };
+
     const getLocError = (err) => {
       fetchCoords.value = null;
       geoError.value = true;
       geoErrorMsg.value = err.message;
     };
+
     const closeGeoError = () => {
       geoError.value = null;
       geoErrorMsg.value = null;
     };
+
+    // plot selected search result
+    const plotResult = (coords) => {
+      // check if result marker has value to remove any preexisting search result plots
+      if (resultMarker.value) {
+        map.removeLayer(resultMarker.value);
+      }
+
+      // create custom marker
+      const customMarker = leaflet.icon({
+        iconUrl: require("../assets/map-marker-blue.svg"),
+        // width and height
+        iconSize: [35, 35],
+      });
+      // create new marker with coords and icon
+      resultMarker.value = leaflet
+        // set marker location
+        .marker([coords.coordinates[1], coords.coordinates[0]], {
+          icon: customMarker,
+        })
+        // add marker to map
+        .addTo(map);
+      // set map view to current location
+      map.setView([coords.coordinates[1], coords.coordinates[0], 13]);
+    };
+
     // plot user location on map
     const plotGeolocation = (coords) => {
       // create custom marker
@@ -117,6 +149,7 @@ export default {
       // set map view to current location
       map.setView([coords.lat, coords.lng], 10);
     };
+
     return {
       coords,
       fetchCoords,
@@ -125,6 +158,7 @@ export default {
       geoError,
       geoErrorMsg,
       getGeolocation,
+      plotResult,
     };
   },
   components: { GeoErrorModal, MapFeatures },

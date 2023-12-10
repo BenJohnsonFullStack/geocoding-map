@@ -28,6 +28,7 @@
               class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
               v-for="(result, index) in searchData"
               :key="index"
+              @click="selectResult(result)"
             >
               <i class="fas fa-map-marker-alt"></i>
               <p class="text-xs">{{ result.place_name_en }}</p>
@@ -58,7 +59,7 @@ import axios from "axios";
 export default {
   components: { LoadingSpinner },
   props: ["coords", "fetchCoords"],
-  setup(props) {
+  setup(props, { emit }) {
     const searchQuery = ref(null);
     const searchData = ref(null);
     const queryTimeout = ref(null);
@@ -93,7 +94,11 @@ export default {
       }, 200);
     };
 
-    return { searchQuery, searchData, queryTimeout, search };
+    const selectResult = (result) => {
+      emit("plotResult", result.geometry);
+    };
+
+    return { searchQuery, searchData, queryTimeout, search, selectResult };
   },
 };
 </script>
