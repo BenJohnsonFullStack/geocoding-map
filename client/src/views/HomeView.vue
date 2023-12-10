@@ -5,7 +5,11 @@
       :geoErrorMsg="geoErrorMsg"
       @closeGeoError="closeGeoError"
     />
-    <MapFeatures :coords="coords" :fetchCoords="fetchCoords" />
+    <MapFeatures
+      :coords="coords"
+      :fetchCoords="fetchCoords"
+      @getGeolocation="getGeolocation"
+    />
     <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
@@ -50,16 +54,27 @@ export default {
     const geoError = ref(null);
     const geoErrorMsg = ref("Testing modal");
     const getGeolocation = () => {
-      // check session storage for coords and plot if they exist
-      if (sessionStorage.getItem) {
-        coords.value = JSON.parse(sessionStorage.getItem("coords"));
-        plotGeolocation(coords.value);
+      // if function is called, only run if we dont have coords
+      if (!coords.value) {
+        // check to see if we have coods in session sotrage
+        if (sessionStorage.getItem("coords")) {
+          coords.value = JSON.parse(sessionStorage.getItem("coords"));
+          plotGeolocation(coords.value);
+          return;
+        }
+
+        // else get coords from geolocation API
+        fetchCoords.value = true;
+        navigator.geolocation.getCurrentPosition(setCoords, getLocError);
         return;
       }
-      // start fetching coords
-      fetchCoords.value = true;
-      navigator.geolocation.getCurrentPosition(setCoords, getLocError);
+
+      // otherwise, remove location
+      coords.value = null;
+      sessionStorage.removeItem("coords");
+      map.removeLayer(geomarker.value);
     };
+
     const setCoords = (pos) => {
       // stop fetching coords
       fetchCoords.value = null;
@@ -109,6 +124,7 @@ export default {
       closeGeoError,
       geoError,
       geoErrorMsg,
+      getGeolocation,
     };
   },
   components: { GeoErrorModal, MapFeatures },

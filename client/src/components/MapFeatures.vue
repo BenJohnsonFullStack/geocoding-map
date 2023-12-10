@@ -5,11 +5,12 @@
     <!-- Geolocation -->
     <div
       class="px-4 bg-white flex items-center shadow-md rounded-md min-h-[45px]"
-      :class="{ 'bg-slate-600': coords }"
+      @click="$emit('getGeolocation')"
+      :class="{ 'bg-[#404c60]': coords }"
     >
       <i
-        class="fa-solid fa-location-arrow text-slate-600 text-[18px]"
-        :class="{ 'text-[#fff]': coords, 'animate-pulse': fetchCoords }"
+        class="fas fa-location-arrow text-slate-600 text-[18px]"
+        :class="{ 'text-white': coords, 'animate-pulse': fetchCoords }"
       ></i>
     </div>
   </div>
