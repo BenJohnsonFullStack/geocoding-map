@@ -19,13 +19,15 @@
       </div>
 
       <!-- Search Results Container -->
-      <div class="absolute mt-2 w-full">
+      <div class="absolute mt-2 w-full" v-if="searchQuery">
         <div class="h-[200px] overflow-scroll bg-white rounded-md">
           <div
             class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
+            v-for="(result, index) in searchData"
+            :key="index"
           >
             <i class="fas fa-map-marker-alt"></i>
-            <p class="text-xs">Testing result entry</p>
+            <p class="text-xs">{{ result.place_name_en }}</p>
           </div>
         </div>
       </div>
