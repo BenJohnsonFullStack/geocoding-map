@@ -4,14 +4,28 @@
   >
     <!-- Search -->
     <div class="relative flex-1 md:min-w-[350px]">
+      <!-- Input Field -->
       <input
         type="text"
         class="pl-9 pr-4 py-3 text-sm focus:outline-slate-600 w-full shadow-md rounded-md"
         placeholder="Search your favorite spot..."
       />
 
+      <!-- Search Icon -->
       <div class="absolute top-0 left-[8px] h-full flex items-center">
         <i class="fas fa-search"></i>
+      </div>
+
+      <!-- Search Results Container -->
+      <div class="absolute mt-2 w-full">
+        <div class="h-[200px] overflow-scroll bg-white rounded-md">
+          <div
+            class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
+          >
+            <i class="fas fa-map-marker-alt"></i>
+            <p class="text-xs">Testing result entry</p>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Geolocation -->
