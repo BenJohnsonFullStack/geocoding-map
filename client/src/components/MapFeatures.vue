@@ -10,6 +10,7 @@
         class="pl-9 pr-4 py-3 text-sm focus:outline-slate-600 w-full shadow-md rounded-md"
         placeholder="Search your favorite spot..."
         v-model="searchQuery"
+        @input="search"
       />
 
       <!-- Search Icon -->
@@ -45,15 +46,44 @@
 
 <script>
 import { ref } from "vue";
+import axios from "axios";
 
 export default {
   props: ["coords", "fetchCoords"],
-  setup() {
+  setup(props) {
     const searchQuery = ref(null);
     const searchData = ref(null);
     const queryTimeout = ref(null);
 
-    return { searchQuery, searchData, queryTimeout };
+    const search = () => {
+      // clear previous timeout
+      clearTimeout(queryTimeout.value);
+
+      queryTimeout.value = setTimeout(async () => {
+        if (searchQuery.value !== "") {
+          const params = new URLSearchParams({
+            // params from mapbox
+            fuzzyMatch: true,
+            language: "en",
+            limit: 10,
+            proximity: props.coords
+              ? `${props.coords.lng}, ${props.coords.lat}`
+              : "0, 0",
+          });
+
+          // request
+          const getData = await axios.get(
+            `http://localhost:9000/api/search/${searchQuery.value}?${params}`
+          );
+
+          // set searchData to relevant axios result
+          searchData.value = getData.data.features;
+          console.log(searchData.value);
+        }
+      }, 750);
+    };
+
+    return { searchQuery, searchData, queryTimeout, search };
   },
 };
 </script>
