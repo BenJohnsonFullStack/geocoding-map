@@ -10,6 +10,8 @@
       :fetchCoords="fetchCoords"
       @getGeolocation="getGeolocation"
       @plotResult="plotResult"
+      :searchResults="searchResults"
+      @toggleSearchResults="toggleSearchResults"
     />
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -127,7 +129,9 @@ export default {
         // add marker to map
         .addTo(map);
       // set map view to current location
-      map.setView([coords.coordinates[1], coords.coordinates[0], 13]);
+      map.setView([coords.coordinates[1], coords.coordinates[0]], 13);
+
+      closeSearchResults();
     };
 
     // plot user location on map
@@ -150,6 +154,16 @@ export default {
       map.setView([coords.lat, coords.lng], 10);
     };
 
+    const searchResults = ref(null);
+
+    const toggleSearchResults = () => {
+      searchResults.value = !searchResults.value;
+    };
+
+    const closeSearchResults = () => {
+      searchResults.value = null;
+    };
+
     return {
       coords,
       fetchCoords,
@@ -159,6 +173,9 @@ export default {
       geoErrorMsg,
       getGeolocation,
       plotResult,
+      searchResults,
+      toggleSearchResults,
+      closeSearchResults,
     };
   },
   components: { GeoErrorModal, MapFeatures },
