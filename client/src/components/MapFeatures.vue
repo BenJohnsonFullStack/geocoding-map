@@ -5,12 +5,18 @@
     <!-- Geolocation -->
     <div
       class="px-4 bg-white flex items-center shadow-md rounded-md min-h-[45px]"
+      :class="{ 'bg-slate-600': coords }"
     >
-      <i class="fa-solid fa-location-arrow text-slate-600 text-[18px]"></i>
+      <i
+        class="fa-solid fa-location-arrow text-slate-600 text-[18px]"
+        :class="{ 'text-[#fff]': coords, 'animate-pulse': fetchCoords }"
+      ></i>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["coords", "fetchCoords"],
+};
 </script>

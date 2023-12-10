@@ -5,7 +5,7 @@
       :geoErrorMsg="geoErrorMsg"
       @closeGeoError="closeGeoError"
     />
-    <MapFeatures />
+    <MapFeatures :coords="coords" :fetchCoords="fetchCoords" />
     <div id="map" class="h-full z-[1]"></div>
   </div>
 </template>
@@ -102,7 +102,14 @@ export default {
       // set map view to current location
       map.setView([coords.lat, coords.lng], 10);
     };
-    return { coords, geomarker, closeGeoError, geoError, geoErrorMsg };
+    return {
+      coords,
+      fetchCoords,
+      geomarker,
+      closeGeoError,
+      geoError,
+      geoErrorMsg,
+    };
   },
   components: { GeoErrorModal, MapFeatures },
 };
