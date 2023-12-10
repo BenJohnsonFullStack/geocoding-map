@@ -20,14 +20,18 @@
 
       <!-- Search Results Container -->
       <div class="absolute mt-2 w-full" v-if="searchQuery">
-        <div class="h-[200px] overflow-scroll bg-white rounded-md">
-          <div
-            class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
-            v-for="(result, index) in searchData"
-            :key="index"
-          >
-            <i class="fas fa-map-marker-alt"></i>
-            <p class="text-xs">{{ result.place_name_en }}</p>
+        <!-- Loading Spinner -->
+        <LoadingSpinner v-if="!searchData" />
+        <div v-else>
+          <div class="h-[200px] overflow-scroll bg-white rounded-md">
+            <div
+              class="px-4 py-2 flex gap-x-2 cursor-pointer hover:bg-slate-600 hover:text-white"
+              v-for="(result, index) in searchData"
+              :key="index"
+            >
+              <i class="fas fa-map-marker-alt"></i>
+              <p class="text-xs">{{ result.place_name_en }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -47,10 +51,12 @@
 </template>
 
 <script>
+import LoadingSpinner from "./LoadingSpinner.vue";
 import { ref } from "vue";
 import axios from "axios";
 
 export default {
+  components: { LoadingSpinner },
   props: ["coords", "fetchCoords"],
   setup(props) {
     const searchQuery = ref(null);
@@ -81,8 +87,10 @@ export default {
           // set searchData to relevant axios result
           searchData.value = getData.data.features;
           console.log(searchData.value);
+        } else {
+          searchData.value = null;
         }
-      }, 750);
+      }, 200);
     };
 
     return { searchQuery, searchData, queryTimeout, search };
