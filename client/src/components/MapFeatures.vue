@@ -99,12 +99,11 @@ export default {
 
           // request
           const getData = await axios.get(
-            `http://localhost:9000/api/search/${searchQuery.value}?${params}`
+            `/api/search/${searchQuery.value}?${params}`
           );
 
           // set searchData to relevant axios result
           searchData.value = getData.data.features;
-          console.log(searchData.value);
         } else {
           searchData.value = null;
         }
@@ -128,7 +127,7 @@ export default {
       search,
       selectResult,
       selectedResult,
-      // removeResult,
+      removeResult,
     };
   },
 };
