@@ -46,6 +46,11 @@ export default {
           }
         )
         .addTo(map);
+
+      map.on("moveend", () => {
+        closeSearchResults();
+      });
+
       getGeolocation();
     });
     // user coords
@@ -108,14 +113,16 @@ export default {
     };
 
     // plot selected search result
+
     const plotResult = (coords) => {
       // check if result marker has value to remove any preexisting search result plots
       if (resultMarker.value) {
         map.removeLayer(resultMarker.value);
+        resultMarker.value = null;
       }
 
       // create custom marker
-      const customMarker = leaflet.icon({
+      const customResultMarker = leaflet.icon({
         iconUrl: require("../assets/map-marker-blue.svg"),
         // width and height
         iconSize: [35, 35],
@@ -124,11 +131,12 @@ export default {
       resultMarker.value = leaflet
         // set marker location
         .marker([coords.coordinates[1], coords.coordinates[0]], {
-          icon: customMarker,
+          icon: customResultMarker,
         })
         // add marker to map
         .addTo(map);
       // set map view to current location
+
       map.setView([coords.coordinates[1], coords.coordinates[0]], 13);
 
       closeSearchResults();
