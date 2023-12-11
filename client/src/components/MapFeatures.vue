@@ -37,6 +37,21 @@
           </div>
         </div>
       </div>
+      <!-- Selected Search Result -->
+      <div v-if="selectedResult" class="mt-2 px-4 py-3 bg-white rounded-md">
+        <i
+          @click="removeResult"
+          class="flex justify-end far fa-times-circle cursor-pointer"
+        ></i>
+        <h1 class="text-lg">{{ selectedResult.text }}</h1>
+        <p class="text-xs mb-1">
+          {{ selectedResult.properties.address }}, {{ selectedResult.city }},
+          {{ selectedResult.state }}
+        </p>
+        <p class="text-xs font-bold">
+          {{ selectedResult.properties.category }}
+        </p>
+      </div>
     </div>
     <!-- Geolocation -->
     <div
@@ -64,6 +79,7 @@ export default {
     const searchQuery = ref(null);
     const searchData = ref(null);
     const queryTimeout = ref(null);
+    const selectedResult = ref(null);
 
     const search = () => {
       // clear previous timeout
@@ -96,10 +112,24 @@ export default {
     };
 
     const selectResult = (result) => {
+      selectedResult.value = result;
       emit("plotResult", result.geometry);
     };
 
-    return { searchQuery, searchData, queryTimeout, search, selectResult };
+    const removeResult = () => {
+      selectedResult.value = null;
+      emit("removeResult");
+    };
+
+    return {
+      searchQuery,
+      searchData,
+      queryTimeout,
+      search,
+      selectResult,
+      selectedResult,
+      // removeResult,
+    };
   },
 };
 </script>

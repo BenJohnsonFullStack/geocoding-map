@@ -12,6 +12,7 @@
       @plotResult="plotResult"
       :searchResults="searchResults"
       @toggleSearchResults="toggleSearchResults"
+      @removeResult="removeResult"
     />
     <div id="map" class="h-full z-[1]"></div>
   </div>
@@ -118,7 +119,6 @@ export default {
       // check if result marker has value to remove any preexisting search result plots
       if (resultMarker.value) {
         map.removeLayer(resultMarker.value);
-        resultMarker.value = null;
       }
 
       // create custom marker
@@ -172,6 +172,10 @@ export default {
       searchResults.value = null;
     };
 
+    const removeResult = () => {
+      map.removeLayer(resultMarker.value);
+    };
+
     return {
       coords,
       fetchCoords,
@@ -184,6 +188,7 @@ export default {
       searchResults,
       toggleSearchResults,
       closeSearchResults,
+      removeResult,
     };
   },
   components: { GeoErrorModal, MapFeatures },
